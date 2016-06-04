@@ -9,10 +9,11 @@ var ajax_call = function ajax_call(options) {
 
         request.open(options.request_type, options.url, true);
 
-        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;' + 'charset=UTF-8');
 
         request.onload = function () {
             if (this.status >= 200 && this.status < 400) {
+
                 var data = JSON.parse(this.response);
                 options.success(data);
             } else {
@@ -22,12 +23,13 @@ var ajax_call = function ajax_call(options) {
 
         request.onerror = options.failure;
 
-        var string_data = R.pipe(R.toPairs, R.map(R.join('=')), R.join('&'))(options.data);
-
-        request.send(string_data);
+        if (options.data) {
+            request.send("data=" + JSON.stringify(options.data));
+        } else {
+            request.send();
+        }
     };
 };
-
 document.querySelector('#clickit').onclick = ajax_call({
     request_type: 'GET',
     url: '/ajax',
@@ -51,6 +53,21 @@ document.querySelector('#clickthis').onclick = ajax_call({
     data: {
         message: 'Your mom is a beehive',
         banana: 'elbows'
+    }
+});
+
+document.querySelector('#clickthisother').onclick = ajax_call({
+    request_type: 'PUT',
+    url: '/ajax',
+    failure: function failure() {
+        return console.err("Something's gone wrong");
+    },
+    success: function success(data) {
+        return document.querySelector('#message').innerHTML = data.message;
+    },
+    data: {
+        message: 'Banana fingers',
+        banana: 'Fake nursury rhymes.'
     }
 });
 

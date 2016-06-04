@@ -6,8 +6,8 @@ app.use(express.static('public'))
 
 app.set('view engine', 'pug')
 
-app.use(body_parser.urlencoded({extended: false}));  
-app.use(body_parser.json());
+app.use(body_parser.urlencoded({extended: false}))  
+app.use(body_parser.json())
 
 app.get('/', function (req, res) {  
     res.render('index')
@@ -20,10 +20,20 @@ app.get('/ajax', function (req, res) {
 })
 
 app.post('/ajax', function (req, res) {  
+    var data = JSON.parse(req.body.data)
     res.json({
         message:
-            `This comes from an AJAJ call! The message sent to the server was ${req.body.message}! `
-            + `The banana was ${req.body.banana}.`
+            `This comes from an AJAJ call! The message sent to the server was ${data.message}! `
+            + `The banana was ${data.banana}.`
+    })
+})
+
+app.put('/ajax', function (req, res) {  
+    var data = JSON.parse(req.body.data)
+    res.json({
+        message:
+            `This comes from an an AJAX PUT call! The message sent to the server was ${data.message}! `
+            + `The banana was ${data.banana}.`
     })
 })
 
